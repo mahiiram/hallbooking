@@ -1,10 +1,22 @@
 const hallbooking_controller = require("express").Router();
 const HallbookingModel = require("../models/HallbookingModel");
 
-hallbooking_controller.get("/",  (req,res,next)=>{
-    res.status(200).json({
-        message:"hallbooking server started"
-    })
+hallbooking_controller.get("/", async (req,res,next)=>{
+    let bookingroom;
+    try{
+      bookingroom = await HallbookingModel.find()
+    }catch(err){
+      return console.log(err)
+    }
+    if(!bookingroom){
+      return res.status(500).json({
+          message:"unexpected error"
+      })
+    }
+  return res.status(200).json({
+      bookingroom,
+      message:"Room data fetched successfully"
+  })
 })
 
 hallbooking_controller.post('/createroom', async (req,res,next)=>{
